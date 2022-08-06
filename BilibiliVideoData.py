@@ -302,7 +302,8 @@ class Abbreviations:
             return cls.abbreviations[item]
         else:
             for k, v in cls.abbreviations.items():
-                return k if v == item else ''
+                if v == item:
+                    return k
 
     @classmethod
     def rename(cls, bvid: str = '', name: str = ''):
