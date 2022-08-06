@@ -19,7 +19,7 @@ def hour():
 
 if __name__ == '__main__':
     uid = 13337125
-    goldeneggs = UP(uid, auto_get=False)
+    goldeneggs = UP(uid, auto_get=True)
     scheduler = BlockingScheduler(timezone='Asia/Shanghai')
     scheduler.add_job(day, 'cron', hour=23, minute=50)
     scheduler.add_job(hour, 'cron', hour='0-23', minute=5)
