@@ -1,3 +1,5 @@
+from threading import Thread
+
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 from BilibiliVideoData import UP, Abbreviations
@@ -17,12 +19,18 @@ def hour():
 
 if __name__ == '__main__':
     uid = 13337125
-    goldeneggs = UP(uid, auto_get=True)
+    goldeneggs = UP(uid, auto_get=False)
     scheduler = BlockingScheduler(timezone='Asia/Shanghai')
     scheduler.add_job(day, 'cron', hour=23, minute=50)
     scheduler.add_job(hour, 'cron', hour='0-23', minute=5)
-    scheduler.start()
+    Thread(target=scheduler.start, args=(), daemon=True).start()
     while True:
-        command = input('command:').split(' ')
-        if command[0] == 'rename':
+        command = input('Command: ').split(' ')
+        if command[0] == 'q' or command[0] == 'quit':
+            break
+        elif command[0] == 'rename':
             Abbreviations.rename()
+        elif command[0] == 'all_name':
+            print(Abbreviations.abbreviations)
+        else:
+            continue
