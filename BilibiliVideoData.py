@@ -33,8 +33,15 @@ def date() -> str:
 
 
 def csv_last_line(fp: IO[str]) -> dict:  # csv文件最末未有效数据
+    """
+    你想读取 CSV 文件，并返回没有空值的一行
+
+    :param fp: 文件IO
+    :type fp: IO[str]
+    """
     f_csv = csv.DictReader(fp)
     d = {k: None for k in f_csv.fieldnames}
+    #
     for e, line in enumerate(reversed(list(f_csv))):
         for key in line:
             if d[key] in (None, EMPTY):
@@ -70,6 +77,9 @@ class UP:
         return self
 
     def get_videos_bvid(self):
+        """
+        获取对应账号所有视频的BV号列表
+        """
         if self.out_print:
             print(f'[{date()}] 正在抓取视频列表')
         videos_bvid = []
@@ -85,6 +95,9 @@ class UP:
         return self
 
     def get_videos(self):
+        """
+        根据存储的bvid列表，创建对应的视频实例。
+        """
         videos = []
         for bvid in self.videos_bvid:
             videos.append(Video(bvid))
@@ -92,6 +105,9 @@ class UP:
         return self
 
     def get_user_data(self):
+        """
+        获取并保存用户的信息。
+        """
         if self.out_print:
             print(f'[{date()}] 正在抓取用户数据', end='')
         user_data = {'date': date()[:10], 'following': None, 'follower': None, 'likes': None, 'archive': None,
@@ -315,6 +331,7 @@ class Abbreviations:
             return
         if name == '':
             name = input(f'当前简称：【{cls[bvid]}】\n请输新入简称：')
+            # 要求用户确认视频名称的更改。
             confirm = input(f'确认将{bvid}：【{cls[bvid]}】 修改为 【{name}】 吗？(Y/N)')
         if confirm in ('Y', 'y', 'yes'):
             src = f'{VIDEOS_PATH}[{cls[bvid]}] {bvid}.csv'
