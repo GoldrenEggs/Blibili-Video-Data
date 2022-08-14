@@ -227,12 +227,15 @@ class UP:
             if video.bvid in new_videos_bvid:
                 new_videos.append(video)
         if self.out_print:
-            print(f'[{date()}] 已找到视频：', *[Abbreviations[bvid] for bvid in new_videos_bvid])
+            if new_videos_bvid:
+                print(f'\n[{date()}] 已找到视频：', *[Abbreviations[bvid] for bvid in new_videos_bvid])
+            else:
+                print('  未找到')
         return tuple(reversed(new_videos))
 
-    def check_new_videos_bvid(self, day: int):  # 返回打在day天内更新的视频BV号
+    def check_new_videos_bvid(self, day: int):  # 返回在day天内更新的视频BV号
         if self.out_print:
-            print(f'[{date()}] 正在查找{day}天内更新的视频')
+            print(f'[{date()}] 正在查找{day}天内更新的视频', end='')
         new_videos_bvid: List[str] = []
         now = time.time()
         f_csv = csv.DictReader(open('Data/VideosData.csv', 'r', encoding='utf-8-sig'))
