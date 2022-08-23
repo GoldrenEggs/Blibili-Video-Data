@@ -10,8 +10,7 @@ def day():
 
 
 def hour():
-    update_videos = goldeneggs.check_update()
-    if update_videos:
+    if update_videos := goldeneggs.check_update():
         print('TNND，你还知道更新啊？', *update_videos)
 
     goldeneggs.get_and_save_hour()
@@ -26,7 +25,7 @@ if __name__ == '__main__':
     Thread(target=scheduler.start, args=(), daemon=True).start()
     while True:
         command = input('Command: ').split(' ')
-        if command[0] == 'q' or command[0] == 'quit':
+        if command[0] in ['q', 'quit']:
             break
         elif command[0] == 'rename':
             Abbreviations.rename()
