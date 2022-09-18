@@ -5,6 +5,7 @@ import time
 from math import ceil
 from threading import Thread
 from typing import IO, List, Tuple
+import yaml
 
 import py7zr
 import requests
@@ -14,10 +15,8 @@ VIDEOS_RAW_PATH = 'Data/Videos.raw/'
 VIDEOS_HOUR_PATH = 'Data/VideosHour/'
 VIDEOS_HOUR_RAW_PATH = 'Data/VideosHour.raw/'
 
-HEADERS = {
-    'Cookie': 'SESSDATA=08e1eebb%2C1679035008%2C2907d*91',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                  'Chrome/101.0.4951.54 Safari/537.36 Edg/101.0.1210.39'}
+with open('config.yaml', 'r', encoding='utf-8') as config:
+    HEADERS = yaml.safe_load(config)['Headers']
 
 EMPTY = '〃'
 
