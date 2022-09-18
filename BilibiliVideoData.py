@@ -15,8 +15,9 @@ VIDEOS_HOUR_PATH = 'Data/VideosHour/'
 VIDEOS_HOUR_RAW_PATH = 'Data/VideosHour.raw/'
 
 HEADERS = {
-    'Cookie': 'SESSDATA=9bc04939%2C1675269901%2C7f47e%2A81',
-    'User-Agent': ''}
+    'Cookie': 'SESSDATA=08e1eebb%2C1679035008%2C2907d*91',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                  'Chrome/101.0.4951.54 Safari/537.36 Edg/101.0.1210.39'}
 
 EMPTY = '〃'
 
@@ -82,10 +83,12 @@ class UP:
         if self.out_print:
             print(f'[{date()}] 正在抓取视频列表')
         videos_bvid = []
-        r = requests.get('http://api.bilibili.com/x/space/arc/search', params={'mid': self.mid})
-        page_number = ceil(r.json()['data']['page']['count'] / r.json()['data']['page']['ps'])
+        space = requests.get('http://api.bilibili.com/x/space/arc/search',
+                             params={'mid': self.mid}, headers=HEADERS).json()
+        page_number = ceil(space['data']['page']['count'] / space['data']['page']['ps'])
         for page in range(1, page_number + 1):
-            r = requests.get('http://api.bilibili.com/x/space/arc/search', params={'mid': self.mid, 'pn': page})
+            r = requests.get('http://api.bilibili.com/x/space/arc/search',
+                             params={'mid': self.mid, 'pn': page}, headers=HEADERS)
             video_list = r.json()['data']['list']['vlist']
             videos_bvid.extend(video_list[i]['bvid'] for i in range(len(video_list)))
         self.videos_bvid = videos_bvid
