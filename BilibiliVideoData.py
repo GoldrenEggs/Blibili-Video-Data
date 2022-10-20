@@ -111,23 +111,25 @@ class UP:
         user_data = {'date': date()[:10], 'following': None, 'follower': None, 'likes': None, 'archive': None,
                      'article': None, 'sign': None, 'notice': None, 'face': None, 'top_photo': None}
 
-        r = requests.get('http://api.bilibili.com/x/relation/stat', params={'vmid': self.mid}).json()['data']
+        r = requests.get('http://api.bilibili.com/x/relation/stat',
+                         params={'vmid': self.mid}, headers=HEADERS).json()['data']
         user_data['following'] = r['following']  # 关注数
         user_data['follower'] = r['follower']  # 粉丝数
 
-        r = requests.get('http://api.bilibili.com/x/space/upstat', params={'mid': self.mid}, headers=HEADERS).json()[
-            'data']
+        r = requests.get('http://api.bilibili.com/x/space/upstat',
+                         params={'mid': self.mid}, headers=HEADERS).json()['data']
         user_data['likes'] = r['likes']  # 点赞数
         user_data['archive'] = r['archive']['view']  # 播放数
         user_data['article'] = r['article']['view']  # 阅读数
 
-        r = requests.get('http://api.bilibili.com/x/space/acc/info', params={'mid': self.mid}, headers=HEADERS).json()[
-            'data']
+        r = requests.get('http://api.bilibili.com/x/space/acc/info',
+                         params={'mid': self.mid}, headers=HEADERS).json()['data']
         user_data['sign'] = r['sign']  # 签名
         user_data['face'] = r['face']  # 头像
         user_data['top_photo'] = r['top_photo']  # 头图
 
-        r = requests.get('http://api.bilibili.com/x/space/notice', params={'mid': self.mid}).json()['data']
+        r = requests.get('http://api.bilibili.com/x/space/notice',
+                         params={'mid': self.mid}, headers=HEADERS).json()['data']
         user_data['notice'] = r  # 公告
 
         self.user_data = user_data
@@ -179,13 +181,15 @@ class UP:
 
     def get_and_save_hour(self, day: int = 14):
         new_videos: Tuple[Video] = self.check_new_videos(day)
+        print(len(new_videos))
         for video in new_videos:
+            print(video.bvid)
             video.get().save(is_hour=True)
         return self
 
     def check_update(self, check_video_count: int = 5, auto_update_videos_data: bool = True) -> tuple:
         req = requests.get('http://api.bilibili.com/x/space/arc/search',
-                           params={'mid': self.mid, 'ps': check_video_count})
+                           params={'mid': self.mid, 'ps': check_video_count}, headers=HEADERS)
         check_videos_bvid = [data['bvid'] for data in req.json()['data']['list']['vlist']]
         videos_bvid = []
         with open('Data/VideosData.csv', 'r', encoding='utf-8-sig') as f:
@@ -199,7 +203,8 @@ class UP:
         return tuple(reversed(new_videos_bvid))
 
     def update_videos_data(self, bvid: str):
-        video_data = requests.get('http://api.bilibili.com/x/web-interface/view', params={'bvid': bvid}).json()['data']
+        video_data = requests.get('http://api.bilibili.com/x/web-interface/view',
+                                  params={'bvid': bvid}, headers=HEADERS).json()['data']
         with open('Data/VideosData.csv', 'a', encoding='utf-8-sig', newline='') as f_videos_data:
             f_csv = csv.DictWriter(f_videos_data, VIDEOS_DATA_HEADER)
             *_, last_line = csv.DictReader(open('Data/VideosData.csv', 'r', encoding='utf-8-sig'))
@@ -258,7 +263,8 @@ class Video:
     def get(self):
         if self.out_print:
             print(f'[{date()}] 正在抓取：{self.bvid}', end='')
-        req = requests.get('http://api.bilibili.com/x/web-interface/view', params={'bvid': self.bvid}).json()
+        req = requests.get('http://api.bilibili.com/x/web-interface/view',
+                           params={'bvid': self.bvid}, headers=HEADERS).json()
         if req['code'] == 0:
             self.data = req['data']
             self.date = date()
@@ -309,8 +315,8 @@ class Video:
 
 
 class Abbreviations:
-    abbreviations: dict = json.load(f_abbreviations := open('Data/Abbreviations.json', 'r', encoding='utf-8'))
-    f_abbreviations.close()
+    with open('Data/Abbreviations.json', 'r', encoding='utf-8') as f:
+        abbreviations: dict = json.load(f)
 
     def __class_getitem__(cls, item):
         if item[:2] == 'BV':
@@ -363,5 +369,7 @@ class Abbreviations:
 
 
 if __name__ == '__main__':
-    goldeneggs = UP(13337125)
-    goldeneggs.save()
+    ...
+    # goldeneggs = UP(13337125, auto_get=False)
+    # goldeneggs.get_user_data()
+    # print(goldeneggs.user_data)

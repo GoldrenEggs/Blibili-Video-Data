@@ -1,3 +1,13 @@
+uid: 13337125
 Headers:
-  Cookie: ''
+  Cookie: 'SESSDATA=08e1eebb%2C1679035008%2C2907d*91'
   User_Agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36 Edg/101.0.1210.39'
+Path:
+  Videos: 'Data/Videos/'
+  VideosRaw: 'Data/Videos.raw/'
+  VideosHour: 'Data/VideosHour/'
+  VideosHourRaw: 'Data/VideosHour.raw/'
+  Abbreviations: 'Data/Abbreviations.json'
+  UserData: 'Data/UserData.csv'
+  VideosData: 'Data/VideosData.csv'
+EmptyChar: '〃'

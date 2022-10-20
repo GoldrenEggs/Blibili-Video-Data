@@ -12,7 +12,6 @@ def day():
 def hour():
     if update_videos := goldeneggs.check_update():
         print('TNND，你还知道更新啊？', *update_videos)
-
     goldeneggs.get_and_save_hour()
 
 
